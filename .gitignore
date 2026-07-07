@@ -1,0 +1,6 @@
+/target
+**/*.rs.bk
+.soroban/
+*.wasm
+.DS_Store
+test_snapshots/

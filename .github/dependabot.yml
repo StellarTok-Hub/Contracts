@@ -1,0 +1,16 @@
+version: 2
+updates:
+  - package-ecosystem: "cargo"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    # Individual PRs, not a batched group: CI runs fmt/clippy/test/wasm-build
+    # on each one, so a bad transitive resolution (as happened with an
+    # upstream crate's unbounded version range breaking this build) is
+    # caught and bisectable per-dependency instead of buried in a batch.
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
