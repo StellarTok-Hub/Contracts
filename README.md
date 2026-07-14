@@ -46,6 +46,7 @@ At its core, the repository implements:
 - 🧾 **On-chain auditability** — every deposit, release, refund, cancellation, and governance change is emitted as a typed contract event.
 - 🧩 **Composable fee logic** — fee calculation lives in its own contract, called cross-contract by escrow, so the fee formula can be reasoned about, tested, and (via `set_fee_distributor`) repointed independently.
 - 🛡️ **Adversarially tested authorization** — every privileged function (`release`, `refund`, `cancel`, admin actions) has a test proving it rejects calls missing the required signer, not just that the happy path works.
+- 🧮 **Validated fee splits** — `release` checks that the `(fee, net)` split reported by the fee-distribution contract actually sums to the campaign's `amount` before paying anyone, so a bad or malicious `fee_distributor` (repointable by admin at any time) can't overdraw the pooled escrow balance.
 - 🦀 **Built in Rust** — leverages Soroban's Rust SDK for performance, safety, and a strong type system.
 
 Contract *governance* is deliberately **not** trust-minimized: a single `admin` key can pause new campaign creation and rotate itself or the fee-distributor address instantly, with no timelock or multisig. See the module docs in [`contracts/escrow/src/lib.rs`](contracts/escrow/src/lib.rs) for the reasoning — this is a documented scope boundary, not an oversight.
