@@ -11,4 +11,5 @@ pub enum Error {
     CampaignNotFound = 7,
     InvalidStatus = 8,
     NotYetExpired = 9,
+    InvalidSplit = 10,
 }
