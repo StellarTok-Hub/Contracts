@@ -228,6 +228,14 @@ impl Escrow {
         let (fee, net) = FeeDistributionClient::new(&env, &fee_distributor)
             .compute_split(&campaign.amount, &campaign.fee_bps);
 
+        // Every campaign's funds sit in this contract's single pooled
+        // balance, not a per-campaign subaccount. `fee_distributor` is
+        // admin-controlled and repointable at any time via
+        // `set_fee_distributor` with no timelock, so a bad or malicious
+        // implementation swapped in later must not be able to make this
+        // contract pay out more than `campaign.amount` — that would come
+        // out of other campaigns' escrowed funds. Validate the split
+        // before treating it as authoritative.
         if fee < 0 {
             return Err(Error::InvalidSplit);
         }
