@@ -23,6 +23,19 @@ impl MismatchedSplitDistributor {
     }
 }
 
+/// Stand-in for a misbehaving `fee-distribution` deployment that reports a
+/// negative `fee`. Used to prove `release` doesn't blindly trust the sign
+/// of either half of the split.
+#[contract]
+struct NegativeFeeDistributor;
+
+#[contractimpl]
+impl NegativeFeeDistributor {
+    pub fn compute_split(_env: Env, amount: i128, _fee_bps: u32) -> (i128, i128) {
+        (-1, amount + 1)
+    }
+}
+
 struct Setup<'a> {
     env: Env,
     escrow: EscrowClient<'a>,
