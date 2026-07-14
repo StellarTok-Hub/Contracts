@@ -360,3 +360,11 @@ fn set_fee_distributor_without_admin_auth_fails() {
     let result = s.escrow.try_set_fee_distributor(&new_fee_distributor);
     assert!(result.is_err());
 }
+
+// --- Fee-distributor split validation ---
+//
+// `fee_distributor` is admin-repointable at any time via
+// `set_fee_distributor`, with no timelock. These tests prove `release`
+// doesn't blindly trust whatever split a (potentially buggy or malicious)
+// deployment at that address reports back — see the comment above the
+// validation in `Escrow::release`.
