@@ -228,6 +228,10 @@ impl Escrow {
         let (fee, net) = FeeDistributionClient::new(&env, &fee_distributor)
             .compute_split(&campaign.amount, &campaign.fee_bps);
 
+        if fee < 0 {
+            return Err(Error::InvalidSplit);
+        }
+
         // Persist the state transition before making any external calls
         // (checks-effects-interactions): a campaign can only ever be
         // released once, even if `campaign.token` were a non-standard
