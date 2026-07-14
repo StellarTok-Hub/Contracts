@@ -51,6 +51,8 @@ At its core, the repository implements:
 
 Contract *governance* is deliberately **not** trust-minimized: a single `admin` key can pause new campaign creation and rotate itself or the fee-distributor address instantly, with no timelock or multisig. See the module docs in [`contracts/escrow/src/lib.rs`](contracts/escrow/src/lib.rs) for the reasoning — this is a documented scope boundary, not an oversight.
 
+Storage liveness is a separate, operational responsibility: Soroban archives storage entries that go too long without a TTL extension, so a deployer should run a keeper that periodically calls `bump_campaign_ttl` for any long-duration campaign and `bump_instance_ttl` for the contract itself — both are public, fund-safe, and exist for exactly this.
+
 ## Architecture
 
 The contract suite is organized around two responsibilities:
