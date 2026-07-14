@@ -75,3 +75,19 @@ fn rejects_amount_whose_scaled_product_overflows_i128() {
     let result = client.try_compute_split(&i128::MAX, &10_000);
     assert!(result.is_err());
 }
+
+#[test]
+fn fee_plus_net_always_equals_amount() {
+    let env = Env::default();
+    let client = client(&env);
+
+    // Sampled amounts/rates, including edges that are easy to get wrong
+    // (odd amounts, 1 bps, near-100%). `escrow::release` trusts this
+    // invariant without re-deriving it, so it needs to hold everywhere.
+    for amount in [0, 1, 7, 999, 1_000_000, i128::MAX / 10_000] {
+        for fee_bps in [0u32, 1, 50, 250, 9_999, 10_000] {
+            let (fee, net) = client.compute_split(&amount, &fee_bps);
+            assert_eq!(fee + net, amount);
+        }
+    }
+}
