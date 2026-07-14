@@ -9,7 +9,7 @@ members = [
 version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0"
-repository = "https://github.com/<org>/Contracts"
+repository = "https://github.com/StellarTok-Hub/Contracts"
 
 [workspace.dependencies]
 soroban-sdk = "26.1.0"
