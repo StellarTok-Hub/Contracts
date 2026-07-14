@@ -246,10 +246,11 @@ impl Escrow {
             return Err(Error::InvalidSplit);
         }
 
-        // Persist the state transition before making any external calls
-        // (checks-effects-interactions): a campaign can only ever be
-        // released once, even if `campaign.token` were a non-standard
-        // contract that tried to call back into this one mid-transfer.
+        // Persist the state transition before making the *token* transfer
+        // calls below (checks-effects-interactions): a campaign can only
+        // ever be released once, even if `campaign.token` were a
+        // non-standard contract that tried to call back into this one
+        // mid-transfer.
         campaign.status = CampaignStatus::Released;
         env.storage()
             .persistent()
