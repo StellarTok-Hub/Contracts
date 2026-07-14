@@ -382,3 +382,17 @@ fn release_rejects_a_split_that_overstates_the_campaign_amount() {
     assert!(result.is_err());
     assert_eq!(s.token.balance(&s.escrow.address), 1_000_000);
 }
+
+#[test]
+fn release_rejects_a_negative_fee() {
+    let s = setup();
+    s.token_admin.mint(&s.depositor, &1_000_000);
+    let (id, _) = create_default_campaign(&s, 1_000_000, 250);
+
+    let bad_distributor = s.env.register(NegativeFeeDistributor, ());
+    s.escrow.set_fee_distributor(&bad_distributor);
+
+    let result = s.escrow.try_release(&id);
+    assert!(result.is_err());
+    assert_eq!(s.token.balance(&s.escrow.address), 1_000_000);
+}
