@@ -16,6 +16,7 @@ Run the same checks CI runs, in this order — each one catches a
 different class of problem, and CI will fail on any of them:
 
 ```bash
+cargo deny check                # license/advisory/source policy (see deny.toml)
 cargo fmt --all -- --check      # formatting
 cargo clippy --workspace --all-targets -- -D warnings   # lints, zero warnings allowed
 cargo test --workspace          # unit + adversarial auth tests
