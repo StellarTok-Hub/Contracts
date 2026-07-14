@@ -25,4 +25,10 @@ including authorization checks, state transitions, and arithmetic.
 Out of scope: the Soroban runtime and Stellar network itself (report those
 to [Stellar's own security process](https://stellar.org/security)), and
 known, documented design tradeoffs called out in this repository's README
-and code comments (e.g. single-admin governance, arbiter-gated release).
+and code comments (e.g. single-admin governance, arbiter-gated release,
+the admin's ability to repoint `fee_distributor` via `set_fee_distributor`
+with no timelock). Note that `escrow::release` independently validates
+the `(fee, net)` split it gets back from whatever contract
+`fee_distributor` currently points to — a way to make that validation
+itself pass on a split that doesn't actually account for the campaign's
+`amount` would be in scope.
