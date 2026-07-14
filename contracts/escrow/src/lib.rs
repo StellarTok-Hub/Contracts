@@ -231,6 +231,9 @@ impl Escrow {
         if fee < 0 {
             return Err(Error::InvalidSplit);
         }
+        if net < 0 {
+            return Err(Error::InvalidSplit);
+        }
 
         // Persist the state transition before making any external calls
         // (checks-effects-interactions): a campaign can only ever be
