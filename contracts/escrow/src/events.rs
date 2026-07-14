@@ -51,6 +51,10 @@ pub struct FeeDistributorUpdated {
     pub new_fee_distributor: Address,
 }
 
+/// `paused` is a topic, like every other indexed field on the events in
+/// this module, so an off-chain indexer can filter directly for
+/// pause/unpause transitions instead of decoding every `PausedUpdated`
+/// event's body.
 #[contractevent]
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct PausedUpdated {
