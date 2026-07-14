@@ -73,7 +73,7 @@ The contract suite is organized around two responsibilities:
 1. A brand funds a campaign via `create_campaign`, which locks the deposit in the **escrow contract** under a per-campaign arbiter and deadline.
 2. **`release`** (arbiter-approved): the **fee-distribution contract** computes the platform/net split, and both parties are paid atomically.
 3. **`refund`** (depositor, after the deadline) or **`cancel`** (depositor + payee, before the deadline): the full amount returns to the depositor if release never happens.
-4. **Governance** (`set_paused`, `set_admin`, `set_fee_distributor`, `bump_campaign_ttl`): admin-gated contract-level operations, separate from any individual campaign's fund safety.
+4. **Governance** (`set_paused`, `set_admin`, `set_fee_distributor`, `bump_campaign_ttl`, `bump_instance_ttl`): admin-gated contract-level operations, separate from any individual campaign's fund safety. `bump_campaign_ttl` and `bump_instance_ttl` are the two exceptions — callable by anyone, since keeping storage alive carries no fund risk.
 
 ## Tech Stack
 
