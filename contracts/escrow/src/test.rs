@@ -396,3 +396,23 @@ fn release_rejects_a_negative_fee() {
     assert!(result.is_err());
     assert_eq!(s.token.balance(&s.escrow.address), 1_000_000);
 }
+
+// --- Instance TTL bump ---
+
+#[test]
+fn bump_instance_ttl_is_callable_by_anyone_and_keeps_the_contract_usable() {
+    let s = setup();
+    s.token_admin.mint(&s.depositor, &10_000);
+
+    // No auth is required or mocked for this call — proves it's the same
+    // "callable by anyone" shape as `bump_campaign_ttl`.
+    s.env.mock_auths(&[]);
+    s.escrow.bump_instance_ttl();
+
+    // Instance-backed reads/writes (admin, fee distributor, campaign
+    // count) still work normally afterwards.
+    s.env.mock_all_auths();
+    let (id, _) = create_default_campaign(&s, 10_000, 0);
+    s.escrow.release(&id);
+    assert_eq!(s.token.balance(&s.payee), 10_000);
+}
