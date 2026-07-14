@@ -164,9 +164,11 @@ Contracts/
 │           ├── lib.rs
 │           ├── errors.rs
 │           └── test.rs
-├── .github/workflows/ci.yml       # fmt, clippy, test, wasm build on every push/PR
+├── .github/workflows/ci.yml       # cargo-deny, fmt, clippy, test, wasm build on every push/PR
 ├── Cargo.toml                     # Workspace manifest
+├── deny.toml                      # cargo-deny license/advisory/source policy
 ├── rust-toolchain.toml            # Pins the toolchain + wasm32v1-none target
+├── CHANGELOG.md
 ├── SECURITY.md
 ├── CONTRIBUTING.md
 └── README.md
