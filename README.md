@@ -85,6 +85,7 @@ The contract suite is organized around two responsibilities:
 | Language           | Rust                                            |
 | Network            | [Stellar](https://stellar.org/)                 |
 | Tooling            | `soroban-cli`, Cargo, WASM                      |
+| Dependency policy  | `cargo-deny` (licenses, advisories, sources — see `deny.toml`) |
 
 ## Getting Started
 
