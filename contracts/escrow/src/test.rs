@@ -370,6 +370,23 @@ fn set_fee_distributor_without_admin_auth_fails() {
 // validation in `Escrow::release`.
 
 #[test]
+fn release_still_succeeds_when_the_real_fee_distributor_reports_a_valid_split() {
+    let s = setup();
+    s.token_admin.mint(&s.depositor, &1_000_000);
+    let (id, _) = create_default_campaign(&s, 1_000_000, 250);
+
+    // Regression guard for the validation added above: the real
+    // `fee-distribution` contract's split (`fee + net == amount`) must
+    // still pass it, not just get rejected less-valid splits.
+    s.escrow.release(&id);
+
+    assert_eq!(
+        s.escrow.get_campaign(&id).status,
+        super::CampaignStatus::Released
+    );
+}
+
+#[test]
 fn release_rejects_a_split_that_overstates_the_campaign_amount() {
     let s = setup();
     s.token_admin.mint(&s.depositor, &1_000_000);
