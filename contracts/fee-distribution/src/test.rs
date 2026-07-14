@@ -63,3 +63,15 @@ fn rejects_negative_amount() {
     let result = client.try_compute_split(&-1, &100);
     assert!(result.is_err());
 }
+
+#[test]
+fn rejects_amount_whose_scaled_product_overflows_i128() {
+    let env = Env::default();
+    let client = client(&env);
+
+    // amount * fee_bps overflows i128 before the division by
+    // BPS_DENOMINATOR gets a chance to bring it back into range —
+    // `checked_mul` must catch this rather than wrapping or panicking.
+    let result = client.try_compute_split(&i128::MAX, &10_000);
+    assert!(result.is_err());
+}
