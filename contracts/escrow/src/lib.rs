@@ -224,6 +224,13 @@ impl Escrow {
         }
         campaign.arbiter.require_auth();
 
+        // This cross-contract call happens before `campaign.status` is
+        // written, so it is *not* covered by the checks-effects-interactions
+        // ordering below — a reentrant call back into `release` for the
+        // same `campaign_id` here would still observe `Pending`. That's
+        // safe only because the Soroban host itself refuses to re-enter a
+        // contract that's already on the call stack; it is not something
+        // this code's ordering enforces on its own.
         let fee_distributor = Self::get_fee_distributor(&env);
         let (fee, net) = FeeDistributionClient::new(&env, &fee_distributor)
             .compute_split(&campaign.amount, &campaign.fee_bps);
