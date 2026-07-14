@@ -368,3 +368,17 @@ fn set_fee_distributor_without_admin_auth_fails() {
 // doesn't blindly trust whatever split a (potentially buggy or malicious)
 // deployment at that address reports back — see the comment above the
 // validation in `Escrow::release`.
+
+#[test]
+fn release_rejects_a_split_that_overstates_the_campaign_amount() {
+    let s = setup();
+    s.token_admin.mint(&s.depositor, &1_000_000);
+    let (id, _) = create_default_campaign(&s, 1_000_000, 250);
+
+    let bad_distributor = s.env.register(MismatchedSplitDistributor, ());
+    s.escrow.set_fee_distributor(&bad_distributor);
+
+    let result = s.escrow.try_release(&id);
+    assert!(result.is_err());
+    assert_eq!(s.token.balance(&s.escrow.address), 1_000_000);
+}
