@@ -133,6 +133,24 @@ impl Escrow {
         Ok(())
     }
 
+    /// Keeps the contract's own instance storage (admin, paused flag,
+    /// fee-distributor address, campaign counter) alive past Soroban's
+    /// TTL/archival window. Callable by anyone, like `bump_campaign_ttl` —
+    /// it only extends the lifetime of an existing entry and carries no
+    /// fund risk.
+    ///
+    /// Instance TTL is otherwise only refreshed by `__constructor` and
+    /// `create_campaign`. A platform with a lull in new campaigns longer
+    /// than the instance TTL, while an existing campaign is still pending,
+    /// could otherwise see this entry archive — `release` reads it via
+    /// `get_fee_distributor` and would fail until the entry is restored.
+    /// This gives anyone (e.g. a keeper) a way to prevent that.
+    pub fn bump_instance_ttl(env: Env) {
+        env.storage()
+            .instance()
+            .extend_ttl(INSTANCE_LIFETIME_THRESHOLD, INSTANCE_BUMP_AMOUNT);
+    }
+
     /// Locks `amount` of `token` from `depositor` into a new campaign.
     /// Returns the new campaign's id.
     #[allow(clippy::too_many_arguments)]
