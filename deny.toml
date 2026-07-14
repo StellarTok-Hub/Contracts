@@ -18,6 +18,10 @@ yanked = "deny"
 [bans]
 multiple-versions = "warn"
 wildcards = "deny"
+# Intra-workspace path dependencies (e.g. escrow -> fee-distribution) have
+# no version to pin and are not a supply-chain risk — they're this repo's
+# own code.
+allow-wildcard-paths = true
 
 [sources]
 unknown-registry = "deny"
