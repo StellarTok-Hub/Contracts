@@ -54,5 +54,6 @@ pub struct FeeDistributorUpdated {
 #[contractevent]
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct PausedUpdated {
+    #[topic]
     pub paused: bool,
 }
