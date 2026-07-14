@@ -3,10 +3,25 @@
 use super::{Escrow, EscrowClient};
 use fee_distribution::FeeDistribution;
 use soroban_sdk::{
+    contract, contractimpl,
     testutils::{Address as _, Ledger},
     token::{StellarAssetClient, TokenClient},
     Address, Env,
 };
+
+/// Stand-in for a misbehaving `fee-distribution` deployment: reports a
+/// split that overstates `campaign.amount` (`fee + net > amount`), the way
+/// a buggy or malicious contract repointed to via `set_fee_distributor`
+/// could. Used to prove `release` doesn't blindly trust the split.
+#[contract]
+struct MismatchedSplitDistributor;
+
+#[contractimpl]
+impl MismatchedSplitDistributor {
+    pub fn compute_split(_env: Env, amount: i128, _fee_bps: u32) -> (i128, i128) {
+        (amount, amount)
+    }
+}
 
 struct Setup<'a> {
     env: Env,
