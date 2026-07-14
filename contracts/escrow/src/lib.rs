@@ -14,6 +14,11 @@
 //! boundary — layering governance safeguards on top, if wanted, is a
 //! product decision left to the deployer, not something this contract
 //! imposes.
+//!
+//! Storage liveness is *not* automatic: [`Escrow::bump_campaign_ttl`] and
+//! [`Escrow::bump_instance_ttl`] both need to be called periodically by
+//! someone (e.g. a keeper) for campaigns and contract state that outlive
+//! Soroban's default TTL/archival window — see their doc comments.
 #![no_std]
 
 mod errors;
