@@ -26,6 +26,9 @@ jobs:
       - name: Install cargo-deny
         uses: taiki-e/install-action@cargo-deny
 
+      - name: Dependency audit (licenses, advisories, bans, sources)
+        run: cargo deny check
+
       - name: Check formatting
         run: cargo fmt --all -- --check
 
