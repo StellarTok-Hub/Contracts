@@ -26,6 +26,11 @@ impl FeeDistribution {
     ///
     /// The fee is floored (integer division), so any rounding remainder is
     /// left in `net` — rounding always favors the payee, never the platform.
+    ///
+    /// Callers such as `escrow::release` independently check that
+    /// `fee + net == amount` on the returned pair before paying it out
+    /// (see that function's doc comment) — this implementation must keep
+    /// that property, not just document it, for every non-error input.
     pub fn compute_split(_env: Env, amount: i128, fee_bps: u32) -> Result<(i128, i128), Error> {
         if amount < 0 {
             return Err(Error::InvalidAmount);
